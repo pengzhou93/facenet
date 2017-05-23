@@ -1,32 +1,10 @@
-"""Performs face alignment and stores face thumbnails in the output directory."""
-# MIT License
-# 
-# Copyright (c) 2016 David Sandberg
-# 
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-# 
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-# 
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
 from scipy import misc
 import sys
+sys.path.append('..')
 import os
 import argparse
 import tensorflow as tf
@@ -127,8 +105,8 @@ def main(args):
 def parse_arguments(argv):
     parser = argparse.ArgumentParser()
     
-    parser.add_argument('input_dir', type=str, help='Directory with unaligned images.')
-    parser.add_argument('output_dir', type=str, help='Directory with aligned face thumbnails.')
+    parser.add_argument('--input_dir', type=str, default = '', help='Directory with unaligned images.')
+    parser.add_argument('--output_dir', type=str, default = '', help='Directory with aligned face thumbnails.')
     parser.add_argument('--image_size', type=int,
         help='Image size (height, width) in pixels.', default=182)
     parser.add_argument('--margin', type=int,
@@ -140,4 +118,17 @@ def parse_arguments(argv):
     return parser.parse_args(argv)
 
 if __name__ == '__main__':
-    main(parse_arguments(sys.argv[1:]))
+
+    args = parse_arguments(sys.argv[1:])
+    ms_celebA_input_dir = '../../data/msceleb_v1_cropped_samples/MsCelebV1-Faces-Cropped.Samples/'
+    ms_celebA_output_dir = '../../data/msceleb_v1_cropped_samples/mtcnn_182'
+    lfw_input_dir = '../../data/lfw/lfw'
+    lfw_output_dir = '../../data/lfw/mtcnn_182'
+    surveillance_video_input_dir = '../../data/surveillance_video/test/SquareOutsideDiningHall1_45'
+    surveillance_video_output_dir = '../../data/surveillance_video/test/SquareOutsideDiningHall1_45_mtcnn_182'
+    args.input_dir = surveillance_video_input_dir
+    args.output_dir = surveillance_video_output_dir
+    args.image_size = 182
+    args.margin = 44
+    args.gpu_memory_fraction = 0.8
+    main(args)
